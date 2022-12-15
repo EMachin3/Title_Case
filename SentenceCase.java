@@ -26,16 +26,16 @@ public class SentenceCase implements Capitalization {
         File file = new File("lowercase_words.txt");
         
         Scanner scanner = new Scanner(file);
-        while(scanner.hasNext())
+        while (scanner.hasNext())
         {
-            System.out.print(scanner.next() + " ");
+            lowercaseWords.add(scanner.next());
         }
         scanner.close();
 
-        for (String str : lowercaseWords)
+        /*for (String str : lowercaseWords)
         {
             System.out.println(str);
-        }
+        }*/
     }
     /**
      * Allows the user to specify which words in the title are proper nouns
@@ -59,6 +59,7 @@ public class SentenceCase implements Capitalization {
             else
             {
                 properNouns.add(word);
+                lowercaseWords.remove(word);
             }
         }
         input.close();
@@ -66,7 +67,8 @@ public class SentenceCase implements Capitalization {
     /**
      * This method should take in a string, modify the string
      * to fit a desired capitalization scheme, and return
-     * the modified string.
+     * the modified string. This implementation should convert
+     * the title field to sentence case.
      * @return the string with a different capitalization format.
      */
     public String changeCapitalization()
@@ -96,7 +98,8 @@ public class SentenceCase implements Capitalization {
                 afterColon = nextWord.endsWith(":");
             }
             else if (properNouns.contains(nextWord.replaceAll("\\p{Punct}","")) || 
-                properNouns.contains(nextWord.replaceAll("\\p{Punct}","").toLowerCase()))
+                properNouns.contains(nextWord.replaceAll("\\p{Punct}","").toLowerCase())
+                || properNouns.contains(this.uppercaseForm(nextWord.replaceAll("\\p{Punct}",""))))
             {
                 newTitle += this.uppercaseForm(nextWord) + " ";
                 afterColon = nextWord.endsWith(":");
