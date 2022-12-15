@@ -32,6 +32,7 @@ public class Main {
                 System.out.println("Invalid input received.");
             }
         }
+        changeTitle.initializeLowercase();
         changeTitle.addProperNouns();
         String newTitle = changeTitle.changeCapitalization();
         System.out.println("Here is your new title:");
