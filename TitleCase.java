@@ -14,6 +14,8 @@ public class TitleCase implements Capitalization {
         afterColon = false;
         lowercaseWords = new HashSet<String>();
         properNouns = new HashSet<String>();
+        properNouns.add("I");
+        properNouns.add("i");
     }
     /**
      * Set the initial values of the lowercaseWords set using a file 
@@ -29,7 +31,7 @@ public class TitleCase implements Capitalization {
         Scanner scanner = new Scanner(file);
         while(scanner.hasNext())
         {
-            System.out.print(scanner.next() + " ");
+            lowercaseWords.add(scanner.next());
         }
         scanner.close();
         /*for(String str : lowercaseWords)
@@ -59,6 +61,7 @@ public class TitleCase implements Capitalization {
             else
             {
                 properNouns.add(word);
+                lowercaseWords.remove(word);
             }
         }
         input.close();
@@ -70,13 +73,52 @@ public class TitleCase implements Capitalization {
     /**
      * This method should take in a string, modify the string
      * to fit a desired capitalization scheme, and return
-     * the modified string.
+     * the modified string. This implementation should convert
+     * the title field to title case.
      * @return the string with a different capitalization format.
      */
     public String changeCapitalization()
     {
         Scanner scanner = new Scanner(title);
-        return null;
+        String newTitle = "";
+        if (scanner.hasNext())
+        {
+            String nextWord = scanner.next();
+            newTitle += this.uppercaseForm(nextWord) + " ";
+            if (nextWord.endsWith(":"))
+            {
+                afterColon = true;
+            }
+        }
+        else
+        {
+            scanner.close();
+            return "";
+        }
+        while (scanner.hasNext())
+        {
+            String nextWord = scanner.next();
+            if (afterColon)
+            {
+                newTitle += this.uppercaseForm(nextWord) + " ";
+                afterColon = nextWord.endsWith(":");
+            }
+            else if (lowercaseWords.contains(nextWord.replaceAll("\\p{Punct}","")) || 
+                lowercaseWords.contains(nextWord.replaceAll("\\p{Punct}","").toLowerCase())
+                || lowercaseWords.contains(this.uppercaseForm(nextWord.replaceAll("\\p{Punct}",""))))
+            {
+                newTitle += this.lowercaseForm(nextWord) + " ";
+                afterColon = nextWord.endsWith(":");
+            }
+            else
+            {
+                newTitle += this.uppercaseForm(nextWord) + " ";
+                afterColon = nextWord.endsWith(":");
+            }
+        }
+        scanner.close();
+        return newTitle;
+        
     }
     /**
      * Modifies a single word so that its first character is uppercase.
@@ -85,7 +127,14 @@ public class TitleCase implements Capitalization {
      */
     public String uppercaseForm(String str)
     {
-        return null;
+        if (str.length() < 2)
+        {
+            return str.substring(0, 1).toUpperCase();
+        }
+        else
+        {
+            return str.substring(0, 1).toUpperCase() + str.substring(1);
+        }
     }
     /**
      * Modifies a single word so that its first character is lowercase.
@@ -94,7 +143,14 @@ public class TitleCase implements Capitalization {
      */
     public String lowercaseForm(String str)
     {
-        return null;
+        if (str.length() < 2)
+        {
+            return str.substring(0, 1).toLowerCase();
+        }
+        else
+        {
+            return str.substring(0, 1).toLowerCase() + str.substring(1);
+        }
     }
     
 }
